@@ -26,10 +26,10 @@ void updateDisplay();
 void setup() {
   ledDisplay.begin(0x70);
   /*Init button objects*/
-  pwrBtn.init(PWR_BTN_PIN, DEBOUNCE_TIME);
-  modeBtn.init(MODE_BTN_PIN, DEBOUNCE_TIME);
-  incrBtn.init(INCR_BTN_PIN, DEBOUNCE_TIME);
-  decrBtn.init(DECR_BTN_PIN, DEBOUNCE_TIME);
+  pwrBtn.init(PWR_BTN_PIN, DEBOUNCE_TIME, HOLD_TIME);
+  modeBtn.init(MODE_BTN_PIN, DEBOUNCE_TIME, HOLD_TIME);
+  incrBtn.init(INCR_BTN_PIN, DEBOUNCE_TIME, HOLD_TIME);
+  decrBtn.init(DECR_BTN_PIN, DEBOUNCE_TIME, HOLD_TIME);
 }
 
 void loop() {
@@ -47,21 +47,31 @@ void loop() {
   /*Handle Increment and Decrement functionality based on mode selected*/
   switch(mode){
     case TEMPO_STATE:
-      //Increment by 1s to start then add checks to increment by factor of 10
+      /*Increment by 1s to start then increment by 10 ever 200 ms if held*/
       if(incrBtn.edgePos())
         ++tempo;
-
-      if(decrBtn.edgePos())
+      else if(incrBtn.held())
+      {
+        if(millis() % 200 == 0)
+          tempo += 10;
+      }
+      else if(decrBtn.edgePos())
         --tempo;
+      else if(decrBtn.held()){
+        if(millis() % 200 == 0)
+          tempo -= 10;
+      }
 
-      if(tempo != prevTempo){
-        if(tempo < MIN_TEMPO)
+      /*Limit tempo to min and max values*/
+      if(tempo < MIN_TEMPO)
           tempo = MIN_TEMPO;
-       if(tempo > MAX_TEMPO)
+      if(tempo > MAX_TEMPO)
           tempo = MAX_TEMPO;
 
+      /*Update display as needed*/
+      if(tempo != prevTempo)   
         updateDisplay();
-      }
+
       break;
 
      case TIME_STATE:

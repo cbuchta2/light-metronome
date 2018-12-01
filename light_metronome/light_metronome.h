@@ -12,6 +12,7 @@
 #define MAX_TEMPO 260
 #define MIN_TEMPO 50
 #define DEBOUNCE_TIME 50
+#define HOLD_TIME 200
 
 /*Mode States*/
 #define TEMPO_STATE 0
