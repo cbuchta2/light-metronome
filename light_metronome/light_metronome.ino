@@ -1,11 +1,12 @@
+#include "light_metronome.h"
+#include "push_button.h"
+#include "helper_functions.h"
 #include <gfxfont.h>
+#include <stdint.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SPITFT.h>
 #include <Adafruit_SPITFT_Macros.h>
 #include <Adafruit_LEDBackpack.h>
-#include "push_button.h"
-#include "helper_functions.h"
-#include "light_metronome.h"
 
 /***Variables***/
 Adafruit_7segment ledDisplay = Adafruit_7segment();
@@ -50,7 +51,9 @@ void loop() {
         break;
 
       case TIME_STATE:
-        //setTimeSignature(&ledDisplay, timeSignature);
+        ledDisplay.writeDigitNum(1, setTimeSignatureUpper(timeSignature));
+        ledDisplay.drawColon(true);
+        ledDisplay.writeDigitNum(3, setTimeSignatureLower(timeSignature));
         break;
     }
     ledDisplay.writeDisplay();  
