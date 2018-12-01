@@ -20,6 +20,7 @@ PushButton modeBtn;
 PushButton incrBtn;
 PushButton decrBtn;
 
+void updateDisplay();
 
 void setup() {
   ledDisplay.begin(0x70);
@@ -39,9 +40,23 @@ void loop() {
   
   /*Update selected mode on rising edge of (debounced) button press*/
   if(modeBtn.edgePos()){
-    mode = (++mode) % NUM_MODE_STATES;
-    
-    /*Clear display and update with mode or tempo display values*/
+    mode = (++mode) % NUM_MODE_STATES; 
+    updateDisplay();
+  }
+  /*Handle Increment and Decrement functionality based on mode selected*/
+  switch(mode){
+    case TEMPO_STATE:
+      
+      break;
+
+     case TIME_STATE:
+
+      break;
+  }
+}
+
+void updateDisplay(){
+/*Clear display and update with mode or tempo display values*/
     ledDisplay.clear();
     ledDisplay.writeDisplay();
     
@@ -56,17 +71,5 @@ void loop() {
         ledDisplay.writeDigitNum(3, setTimeSignatureLower(timeSignature));
         break;
     }
-    ledDisplay.writeDisplay();  
-  }
-
-  /*Handle Increment and Decrement functionality based on mode selected*/
-  switch(mode){
-    case TEMPO_STATE:
-      
-      break;
-
-     case TIME_STATE:
-
-      break;
-  }
+    ledDisplay.writeDisplay();   
 }
