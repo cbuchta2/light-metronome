@@ -1,5 +1,6 @@
 #include "light_metronome.h"
 #include "push_button.h"
+#include "metronome.h"
 #include "helper_functions.h"
 #include <gfxfont.h>
 #include <stdint.h>
@@ -14,12 +15,14 @@ int mode = 0;
 int tempo = 120;
 int prevTempo;
 int timeSignature;
+bool metronomeEnabled;
 
 /*Button Vars*/
 PushButton pwrBtn;
 PushButton modeBtn;
 PushButton incrBtn;
 PushButton decrBtn;
+Metronome  metronome;
 
 void updateDisplay();
 
@@ -30,6 +33,8 @@ void setup() {
   modeBtn.init(MODE_BTN_PIN, DEBOUNCE_TIME, HOLD_TIME);
   incrBtn.init(INCR_BTN_PIN, DEBOUNCE_TIME, HOLD_TIME);
   decrBtn.init(DECR_BTN_PIN, DEBOUNCE_TIME, HOLD_TIME);
+
+  metronome.init(tempo, timeSignature);
 }
 
 void loop() {
@@ -38,12 +43,18 @@ void loop() {
   modeBtn.readPin();
   incrBtn.readPin();
   decrBtn.readPin();
+
+  /*Update Metronome Enable on rising edge of button press*/
+  if(pwrBtn.edgePos()){
+    metronomeEnabled = !metronomeEnabled;
+  }
   
   /*Update selected mode on rising edge of (debounced) button press*/
   if(modeBtn.edgePos()){
     mode = (++mode) % NUM_MODE_STATES; 
     updateDisplay();
   }
+  
   /*Handle Increment and Decrement functionality based on mode selected*/
   switch(mode){
     case TEMPO_STATE:
@@ -85,6 +96,24 @@ void loop() {
       }
       break;
   }
+
+  /*Run Metronome*/
+  int action = metronome.runMetronome(metronomeEnabled);
+  switch (action)
+  {
+    case BEAT:
+
+      break;
+
+    case MEASURE:
+
+      break;
+      
+    default:
+
+      break;
+  }
+  
   prevTempo = tempo;
 }
 
