@@ -9,8 +9,8 @@
 #define INCR_BTN_PIN 13
 
 /*Values*/
-#define MAX_TEMPO 300
-#define MIN_TEMPO 60
+#define MAX_TEMPO 260
+#define MIN_TEMPO 50
 #define DEBOUNCE_TIME 50
 
 /*Mode States*/
@@ -19,9 +19,9 @@
 #define NUM_MODE_STATES 2
 
 /*Time Signature Options*/
-#define TIME_FOUR_FOUR 0
+#define TIME_TWO_FOUR  0
 #define TIME_THREE_FOUR 1
-#define TIME_TWO_FOUR  2
+#define TIME_FOUR_FOUR 2
 #define NUM_TIME_ELEM  3
 
 #endif
