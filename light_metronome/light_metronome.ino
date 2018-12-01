@@ -5,6 +5,7 @@
 #include <Adafruit_LEDBackpack.h>
 
 /*Constants*/
+#define PWR_BTN_PIN 7
 #define MODE_BTN_PIN 8
 #define DECR_BTN_PIN 12
 #define INCR_BTN_PIN 13
@@ -37,6 +38,7 @@ int mode = 0;
 int tempo = 120;
 
 /*Button Vars*/
+button_typ pwrBtn;
 button_typ modeBtn;
 button_typ incrBtn;
 button_typ decrBtn;
