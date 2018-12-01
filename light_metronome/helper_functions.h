@@ -6,5 +6,6 @@
 
 int setTimeSignatureUpper(int timeSignature);
 int setTimeSignatureLower(int timeSignature);
+void setColor(int red, int green, int blue);
 
 #endif

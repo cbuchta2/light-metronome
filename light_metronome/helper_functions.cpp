@@ -29,3 +29,10 @@ int setTimeSignatureLower(int timeSignature)
             break; 
         }
 }
+
+void setColor(int red, int green, int blue){
+  /*Write PWM value between 0..255 to pins*/
+  analogWrite(RED_PIN, red);
+  analogWrite(GREEN_PIN, green);
+  analogWrite(BLUE_PIN, blue);
+}
