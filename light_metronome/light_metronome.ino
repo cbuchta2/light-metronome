@@ -4,25 +4,14 @@
 #include <Adafruit_SPITFT_Macros.h>
 #include <Adafruit_LEDBackpack.h>
 #include "push_button.h"
-
-/*Constants*/
-#define PWR_BTN_PIN 7
-#define MODE_BTN_PIN 8
-#define DECR_BTN_PIN 12
-#define INCR_BTN_PIN 13
-
-#define MAX_TEMPO 300
-#define MIN_TEMPO 60
-#define NUM_MODE_STATES 2
-
-#define TEMPO_STATE 0
-#define TIME_STATE 1
-#define DEBOUNCE_TIME 50
+#include "helper_functions.h"
+#include "light_metronome.h"
 
 /***Variables***/
 Adafruit_7segment ledDisplay = Adafruit_7segment();
 int mode = 0;
 int tempo = 120;
+timeSignatureEnum timeSignature;
 
 /*Button Vars*/
 PushButton pwrBtn;
@@ -61,11 +50,20 @@ void loop() {
         break;
 
       case TIME_STATE:
-        ledDisplay.writeDigitNum(1, 4);
-        ledDisplay.drawColon(true);
-        ledDisplay.writeDigitNum(3, 4);
+        //setTimeSignature(&ledDisplay, timeSignature);
         break;
     }
     ledDisplay.writeDisplay();  
+  }
+
+  /*Handle Increment and Decrement functionality based on mode selected*/
+  switch(mode){
+    case TEMPO_STATE:
+      
+      break;
+
+     case TIME_STATE:
+
+      break;
   }
 }
