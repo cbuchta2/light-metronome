@@ -5,6 +5,9 @@
 /*IO PIN Constants*/
 #define PWR_BTN_PIN 7
 #define MODE_BTN_PIN 8
+#define RED_PIN 9
+#define GREEN_PIN 10
+#define BLUE_PIN 11
 #define DECR_BTN_PIN 12
 #define INCR_BTN_PIN 13
 
@@ -13,6 +16,7 @@
 #define MIN_TEMPO 50
 #define DEBOUNCE_TIME 50
 #define HOLD_TIME 200
+#define BLINK_TIME 100
 
 /*Mode States*/
 #define TEMPO_STATE 0

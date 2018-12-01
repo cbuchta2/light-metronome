@@ -16,6 +16,7 @@ int tempo = 120;
 int prevTempo;
 int timeSignature;
 bool metronomeEnabled;
+unsigned long setTime;
 
 /*Button Vars*/
 PushButton pwrBtn;
@@ -28,6 +29,11 @@ void updateDisplay();
 
 void setup() {
   ledDisplay.begin(0x70);
+  /*Setup PWM Outputs for RGB LED*/
+  pinMode(RED_PIN, OUTPUT);
+  pinMode(GREEN_PIN, OUTPUT);
+  pinMode(BLUE_PIN, OUTPUT);
+  
   /*Init button objects*/
   pwrBtn.init(PWR_BTN_PIN, DEBOUNCE_TIME, HOLD_TIME);
   modeBtn.init(MODE_BTN_PIN, DEBOUNCE_TIME, HOLD_TIME);
@@ -80,9 +86,10 @@ void loop() {
           tempo = MAX_TEMPO;
 
       /*Update display as needed*/
-      if(tempo != prevTempo)   
+      if(tempo != prevTempo){   
         updateDisplay();
-
+        metronome.setTempo(tempo);
+      }
       break;
 
      case TIME_STATE:
@@ -94,6 +101,7 @@ void loop() {
         timeSignature = (--timeSignature + NUM_TIME_ELEM) % NUM_TIME_ELEM;
         updateDisplay();
       }
+      metronome.setTimeSignature(timeSignature);
       break;
   }
 
@@ -102,15 +110,18 @@ void loop() {
   switch (action)
   {
     case BEAT:
-
+        setColor(25, 0, 0);
+        setTime = millis();
       break;
 
     case MEASURE:
-
+        setColor(0,25,0);
+        setTime = millis();
       break;
       
     default:
-
+        if(millis() - setTime > BLINK_TIME)
+          setColor(0,0,0);
       break;
   }
   

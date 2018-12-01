@@ -18,6 +18,7 @@ class Metronome{
   
   private:
     unsigned int _count;
+    unsigned long _lastAction;
     int _tempo;
     int _timeSignature;
     bool  _enabled;

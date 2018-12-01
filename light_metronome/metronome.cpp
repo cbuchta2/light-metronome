@@ -40,7 +40,8 @@ int Metronome::runMetronome(bool enabled)
     
     unsigned long timePerBeat = MS_PER_MIN / _tempo;
 
-    if(millis() % timePerBeat == 0){
+    if((millis() - _lastAction) > timePerBeat){
+      _lastAction = millis();
       _count++;
       if(_count % measure == 0)
         return MEASURE;
@@ -52,6 +53,7 @@ int Metronome::runMetronome(bool enabled)
     
   }
   else{
+    _lastAction = 0;
     _count = 0;
     return 0;
   }
