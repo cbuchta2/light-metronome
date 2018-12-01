@@ -12,6 +12,7 @@
 Adafruit_7segment ledDisplay = Adafruit_7segment();
 int mode = 0;
 int tempo = 120;
+int prevTempo;
 int timeSignature;
 
 /*Button Vars*/
@@ -27,12 +28,12 @@ void setup() {
   /*Init button objects*/
   pwrBtn.init(PWR_BTN_PIN, DEBOUNCE_TIME);
   modeBtn.init(MODE_BTN_PIN, DEBOUNCE_TIME);
-  incrBtn.init(DECR_BTN_PIN, DEBOUNCE_TIME);
-  decrBtn.init(INCR_BTN_PIN, DEBOUNCE_TIME);
+  incrBtn.init(INCR_BTN_PIN, DEBOUNCE_TIME);
+  decrBtn.init(DECR_BTN_PIN, DEBOUNCE_TIME);
 }
 
 void loop() {
-
+  
   pwrBtn.readPin();
   modeBtn.readPin();
   incrBtn.readPin();
@@ -46,7 +47,21 @@ void loop() {
   /*Handle Increment and Decrement functionality based on mode selected*/
   switch(mode){
     case TEMPO_STATE:
-      
+      //Increment by 1s to start then add checks to increment by factor of 10
+      if(incrBtn.edgePos())
+        ++tempo;
+
+      if(decrBtn.edgePos())
+        --tempo;
+
+      if(tempo != prevTempo){
+        if(tempo < MIN_TEMPO)
+          tempo = MIN_TEMPO;
+       if(tempo > MAX_TEMPO)
+          tempo = MAX_TEMPO;
+
+        updateDisplay();
+      }
       break;
 
      case TIME_STATE:
@@ -60,6 +75,7 @@ void loop() {
       }
       break;
   }
+  prevTempo = tempo;
 }
 
 void updateDisplay(){
