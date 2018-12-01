@@ -1,30 +1,30 @@
 #include "helper_functions.h"
 
-int setTimeSignatureUpper(timeSignatureEnum timeSignature)
+int setTimeSignatureUpper(int timeSignature)
 {
         switch(timeSignature)
         {
-          case timeFOUR_FOUR:
+          case TIME_FOUR_FOUR:
               return 4;
             break;
 
-          case timeTHREE_FOUR:
+          case TIME_THREE_FOUR:
               return 3;
             break;
 
-          case timeTWO_FOUR:
+          case TIME_TWO_FOUR:
               return 2;
             break; 
         }
 }
 
-int setTimeSignatureLower(timeSignatureEnum timeSignature)
+int setTimeSignatureLower(int timeSignature)
 {
         switch(timeSignature)
         {
-          case timeFOUR_FOUR:
-          case timeTHREE_FOUR:
-          case timeTWO_FOUR:
+          case TIME_FOUR_FOUR:
+          case TIME_THREE_FOUR:
+          case TIME_TWO_FOUR:
               return 4;
             break; 
         }

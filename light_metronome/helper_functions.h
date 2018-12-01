@@ -4,7 +4,7 @@
 #include "light_metronome.h"
 #include <Arduino.h>
 
-int setTimeSignatureUpper(timeSignatureEnum timeSignature);
-int setTimeSignatureLower(timeSignatureEnum timeSignature);
+int setTimeSignatureUpper(int timeSignature);
+int setTimeSignatureLower(int timeSignature);
 
 #endif

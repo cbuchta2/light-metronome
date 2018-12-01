@@ -12,7 +12,7 @@
 Adafruit_7segment ledDisplay = Adafruit_7segment();
 int mode = 0;
 int tempo = 120;
-timeSignatureEnum timeSignature;
+int timeSignature;
 
 /*Button Vars*/
 PushButton pwrBtn;
@@ -50,7 +50,14 @@ void loop() {
       break;
 
      case TIME_STATE:
-
+      if(incrBtn.edgePos()){
+        timeSignature = (++timeSignature) % NUM_TIME_ELEM;
+        updateDisplay();
+      }
+      if(decrBtn.edgePos()){
+        timeSignature = (--timeSignature + NUM_TIME_ELEM) % NUM_TIME_ELEM;
+        updateDisplay();
+      }
       break;
   }
 }
