@@ -3,6 +3,7 @@
 #include <Adafruit_SPITFT.h>
 #include <Adafruit_SPITFT_Macros.h>
 #include <Adafruit_LEDBackpack.h>
+#include "push_button.h"
 
 /*Constants*/
 #define PWR_BTN_PIN 7
@@ -18,55 +19,36 @@
 #define TIME_STATE 1
 #define DEBOUNCE_TIME 50
 
-/*Struct definition*/
-/* button_typ
- *  Struct containing all variables need for edge detection 
- *  and deboucing of a press button input
- */
-typedef struct button_typ
-{
-  int reading;
-  int prevReading;
-  unsigned long lastDebounceTime;
-  int state;
-  int prevState; 
-} button_typ;
-
 /***Variables***/
 Adafruit_7segment ledDisplay = Adafruit_7segment();
 int mode = 0;
 int tempo = 120;
 
 /*Button Vars*/
-button_typ pwrBtn;
-button_typ modeBtn;
-button_typ incrBtn;
-button_typ decrBtn;
+PushButton pwrBtn;
+PushButton modeBtn;
+PushButton incrBtn;
+PushButton decrBtn;
+
 
 void setup() {
   ledDisplay.begin(0x70);
-  pinMode(MODE_BTN_PIN, INPUT);
-  pinMode(DECR_BTN_PIN, INPUT);
-  pinMode(INCR_BTN_PIN, INPUT);
+  /*Init button objects*/
+  pwrBtn.init(PWR_BTN_PIN, DEBOUNCE_TIME);
+  modeBtn.init(MODE_BTN_PIN, DEBOUNCE_TIME);
+  incrBtn.init(DECR_BTN_PIN, DEBOUNCE_TIME);
+  decrBtn.init(INCR_BTN_PIN, DEBOUNCE_TIME);
 }
 
 void loop() {
-  /*Check push button digital inputs and debounce*/
-  modeBtn.reading = digitalRead(MODE_BTN_PIN);
 
-  /*Check if reading has changed due to button press or noise*/
-  if (modeBtn.reading != modeBtn.prevReading) {
-    modeBtn.lastDebounceTime = millis();
-  }
-  /*Check reading again after debounce delay*/
-  if ((millis() - modeBtn.lastDebounceTime) > DEBOUNCE_TIME) {
-    /*If reading is different from the recorded state of the button, update state*/
-    if (modeBtn.reading != modeBtn.state)
-      modeBtn.state = modeBtn.reading;
-  }
-
+  pwrBtn.readPin();
+  modeBtn.readPin();
+  incrBtn.readPin();
+  decrBtn.readPin();
+  
   /*Update selected mode on rising edge of (debounced) button press*/
-  if(modeBtn.state && !modeBtn.prevState){
+  if(modeBtn.edgePos()){
     mode = (++mode) % NUM_MODE_STATES;
     
     /*Clear display and update with mode or tempo display values*/
@@ -86,11 +68,4 @@ void loop() {
     }
     ledDisplay.writeDisplay();  
   }
-
-  
-  
-  
-  /*Update prev reading variables for edge detection*/
-  modeBtn.prevState = modeBtn.state;
-  modeBtn.prevReading = modeBtn.reading;
 }
