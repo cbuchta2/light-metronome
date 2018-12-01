@@ -13,8 +13,11 @@
 Adafruit_7segment ledDisplay = Adafruit_7segment();
 int mode = 0;
 int tempo = 120;
+int brightnessPercent = 50;
+int prevBrightnessPercent;
+int brightnessVal;
 int prevTempo;
-int timeSignature;
+int timeSignature = TIME_FOUR_FOUR;
 bool metronomeEnabled;
 unsigned long setTime;
 
@@ -103,19 +106,48 @@ void loop() {
       }
       metronome.setTimeSignature(timeSignature);
       break;
+      
+     case BRIGHT_STATE:
+      /*Increment by 1s to start then increment by 10 ever 200 ms if held*/
+      if(incrBtn.edgePos())
+        ++brightnessPercent;
+      else if(incrBtn.held())
+      {
+        if(millis() % 200 == 0)
+          brightnessPercent += 10;
+      }
+      else if(decrBtn.edgePos())
+        --brightnessPercent;
+      else if(decrBtn.held()){
+        if(millis() % 200 == 0)
+          brightnessPercent -= 10;
+      }
+
+      /*Limit tempo to min and max values*/
+      if(brightnessPercent < MIN_BRIGHT_PERCENT)
+          brightnessPercent = MIN_BRIGHT_PERCENT;
+      if(brightnessPercent > MAX_BRIGHT_PERCENT)
+          brightnessPercent = MAX_BRIGHT_PERCENT;
+
+      /*Update display as needed*/
+      if(brightnessPercent != prevBrightnessPercent){   
+        updateDisplay();
+      }
+      break;
   }
 
   /*Run Metronome*/
   int action = metronome.runMetronome(metronomeEnabled);
+  brightnessVal = MIN_BRIGHT_VAL + (MAX_BRIGHT_VAL - MIN_BRIGHT_VAL) * ((float)(brightnessPercent - MIN_BRIGHT_PERCENT)/(float)(MAX_BRIGHT_PERCENT - MIN_BRIGHT_PERCENT)); 
   switch (action)
   {
     case BEAT:
-        setColor(25, 0, 0);
+        setColor(0, 0, brightnessVal);
         setTime = millis();
       break;
 
     case MEASURE:
-        setColor(0,25,0);
+        setColor(brightnessVal,0,0);
         setTime = millis();
       break;
       
@@ -126,6 +158,7 @@ void loop() {
   }
   
   prevTempo = tempo;
+  prevBrightnessPercent = brightnessPercent;
 }
 
 void updateDisplay(){
@@ -142,6 +175,11 @@ void updateDisplay(){
         ledDisplay.writeDigitNum(1, setTimeSignatureUpper(timeSignature));
         ledDisplay.drawColon(true);
         ledDisplay.writeDigitNum(3, setTimeSignatureLower(timeSignature));
+        break;
+
+       case BRIGHT_STATE:
+        ledDisplay.println(brightnessPercent);
+        ledDisplay.writeDigitRaw(0,P_BITMASK); 
         break;
     }
     ledDisplay.writeDisplay();   
